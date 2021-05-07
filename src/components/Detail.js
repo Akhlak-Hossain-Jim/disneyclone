@@ -1,44 +1,73 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useHistory, useParams } from "react-router";
 import styled from "styled-components";
+import db from "../firebase";
+import { Helmet } from "react-helmet";
 
 function Detail() {
+  const { id } = useParams();
+
+  const [movie, setMovie] = useState();
+
+  const history = useHistory();
+
+  useEffect(() => {
+    db.collection("movies")
+      .doc(id)
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          setMovie(doc.data());
+        } else {
+          history.push("/");
+        }
+      });
+  }, [id, movie]);
+  console.log(movie);
+
   return (
-    <Container>
-      <Background>
-        <img
-          src="https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/4F39B7E16726ECF419DD7C49E011DD95099AA20A962B0B10AA1881A70661CE45/scale?width=1440&aspectRatio=1.78&format=jpeg"
-          alt=""
-        />
-      </Background>
-      <ImageTitle>
-        <img
-          src="https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/D7AEE1F05D10FC37C873176AAA26F777FC1B71E7A6563F36C6B1B497CAB1CEC2/scale?width=1440&aspectRatio=1.78"
-          alt=""
-        />
-      </ImageTitle>
-      <Controls>
-        <PlayButton>
-          <img src="/images/play-icon-black.png" alt="" />
-          <span>PLAY</span>
-        </PlayButton>
-        <TrailerButton>
-          <img src="/images/play-icon-white.png" alt="" />
-          <span>Trailer</span>
-        </TrailerButton>
-        <AddButton>
-          <span>+</span>
-        </AddButton>
-        <GroupWatchButton>
-          <img src="/images/group-icon.png" alt="" />
-        </GroupWatchButton>
-      </Controls>
-      <SubTitle>2018 • 7m • Family, Fantasy, Kids, Animation</SubTitle>
-      <Description>
-        A Chinese mom who’s sad when her grown son leaves home gets another
-        chance at motherhood when one of her dumplings springs to life. But she
-        finds that nothing stays cute and small forever.
-      </Description>
-    </Container>
+    <>
+      {movie && (
+        <Helmet>
+          <meta charSet="utf-8" />
+          <title>{movie.title} | Disney+ clone</title>
+          <link rel="canonical" href={window.location} />
+          <link rel="icon" href={movie.titleImg} />
+          <link rel="apple-touch-icon" href={movie.titleImg} />
+          <meta name="description" content={movie.description} />
+        </Helmet>
+      )}
+      <Container>
+        {movie && (
+          <>
+            <Background>
+              <img src={movie.backgroundImg} alt="" />
+            </Background>
+            <ImageTitle>
+              <img src={movie.titleImg} alt="" />
+            </ImageTitle>
+            <Controls>
+              <PlayButton>
+                <img src="/images/play-icon-black.png" alt="" />
+                <span>PLAY</span>
+              </PlayButton>
+              <TrailerButton>
+                <img src="/images/play-icon-white.png" alt="" />
+                <span>Trailer</span>
+              </TrailerButton>
+              <AddButton>
+                <span>+</span>
+              </AddButton>
+              <GroupWatchButton>
+                <img src="/images/group-icon.png" alt="" />
+              </GroupWatchButton>
+            </Controls>
+            <SubTitle>{movie.subTitle}</SubTitle>
+            <Description>{movie.description}</Description>
+          </>
+        )}
+      </Container>
+    </>
   );
 }
 
@@ -69,9 +98,9 @@ const ImageTitle = styled.div`
   min-height: 170px;
   width: 35vw;
   min-width: 200px;
-  margin-top: 60px;
+  margin: 60px 0;
   @media (max-width: 768px) {
-    margin-top: 10px;
+    margin: 10px 0;
   }
   img {
     width: 100%;

@@ -1,20 +1,34 @@
 import React from "react";
 import styled from "styled-components";
+import { Helmet } from "react-helmet";
 
 function Login() {
   return (
-    <Container>
-      <CTA>
-        <CTALogoOne src="/images/cta-logo-one.svg" />
-        <SignUp>GET ALL THERE</SignUp>
-        <Description>
-          Get Premier Access to Raya and the Last Dragon for an additional fee
-          with a Disney+ subscription. As of 03/26/21, the price of Disney+ and
-          The Disney Bundle will increase by $1.
-        </Description>
-        <CTALogoTwo src="/images/cta-logo-two.png" />
-      </CTA>
-    </Container>
+    <>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Login | Disney+ Clone</title>
+        <link rel="canonical" href={window.location} />
+        <link rel="icon" href="/images/logo.svg" />
+        <link rel="apple-touch-icon" href="/images/logo.svg" />
+        <meta
+          name="description"
+          content="Disney+ clone created by Akhlak Hossain Jim with React-Redux tamplate, Styled-Component, react-hrlmet & firebase"
+        />
+      </Helmet>
+      <Container>
+        <CTA>
+          <CTALogoOne src="/images/cta-logo-one.svg" />
+          <SignUp>GET ALL THERE</SignUp>
+          <Description>
+            Get Premier Access to Raya and the Last Dragon for an additional fee
+            with a Disney+ subscription. As of 03/26/21, the price of Disney+
+            and The Disney Bundle will increase by $1.
+          </Description>
+          <CTALogoTwo src="/images/cta-logo-two.png" />
+        </CTA>
+      </Container>
+    </>
   );
 }
 

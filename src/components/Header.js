@@ -1,41 +1,100 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useHistory } from "react-router-dom";
 import styled from "styled-components";
+import {
+  selectUserName,
+  selectUserPhoto,
+  setSignOut,
+  setUserLogin,
+} from "../features/user/userSlice";
+import { auth, provider } from "../firebase";
 
 function Header() {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const userName = useSelector(selectUserName);
+  const userPhoto = useSelector(selectUserPhoto);
+
+  useEffect(() => {
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        dispatch(
+          setUserLogin({
+            name: user.displayName,
+            email: user.email,
+            photo: user.photoURL,
+          })
+        );
+        history.push("/");
+      }
+    });
+  }, []);
+
+  const signIn = () => {
+    auth.signInWithPopup(provider).then((result) => {
+      let user = result.user;
+      dispatch(
+        setUserLogin({
+          name: user.displayName,
+          email: user.email,
+          photo: user.photoURL,
+        })
+      );
+      history.push("/");
+    });
+  };
+
+  const signOut = () => {
+    auth.signOut().then(() => {
+      dispatch(setSignOut());
+      history.push("/login");
+    });
+  };
+
   return (
     <Nav>
-      <Logo src="/images/logo.svg" />
-      <NavMenu>
-        <a href="dj">
-          <img src="/images/home-icon.svg" alt="" />
-          <span>HOME</span>
-        </a>
+      <Link to="/">
+        <Logo src="/images/logo.svg" />
+      </Link>
+      {!userName ? (
+        <Login onClick={signIn}>Login</Login>
+      ) : (
+        <>
+          <NavMenu>
+            <Link to="/">
+              <img src="/images/home-icon.svg" alt="" />
+              <span>HOME</span>
+            </Link>
 
-        <a href="dj">
-          <img src="/images/search-icon.svg" alt="" />
-          <span>SEARCH</span>
-        </a>
-        <a href="dj">
-          <img src="/images/watchlist-icon.svg" alt="" />
-          <span>WATCHLIST</span>
-        </a>
-        <a href="dj">
-          <img src="/images/original-icon.svg" alt="" />
-          <span>ORIGINALS</span>
-        </a>
-        <a href="dj">
-          <img src="/images/movie-icon.svg" alt="" />
-          <span>MOVIES</span>
-        </a>
-        <a href="dj">
-          <img src="/images/series-icon.svg" alt="" />
-          <span>SERIES</span>
-        </a>
-      </NavMenu>
-      <UserImage
-        src="https://lh3.googleusercontent.com/ogw/ADGmqu_M7iN5zIJS00Jmx9gng2MGFn7c4a0tl2-tN6dOLSw=s64-c-mo"
-        alt=""
-      />
+            <a href="dj">
+              <img src="/images/search-icon.svg" alt="" />
+              <span>SEARCH</span>
+            </a>
+            <a href="dj">
+              <img src="/images/watchlist-icon.svg" alt="" />
+              <span>WATCHLIST</span>
+            </a>
+            <a href="dj">
+              <img src="/images/original-icon.svg" alt="" />
+              <span>ORIGINALS</span>
+            </a>
+            <a href="dj">
+              <img src="/images/movie-icon.svg" alt="" />
+              <span>MOVIES</span>
+            </a>
+            <a href="dj">
+              <img src="/images/series-icon.svg" alt="" />
+              <span>SERIES</span>
+            </a>
+          </NavMenu>
+          <UserImage
+            onClick={signOut}
+            src="https://lh3.googleusercontent.com/ogw/ADGmqu_M7iN5zIJS00Jmx9gng2MGFn7c4a0tl2-tN6dOLSw=s64-c-mo"
+            alt=""
+          />
+        </>
+      )}
     </Nav>
   );
 }
@@ -47,6 +106,7 @@ const Nav = styled.nav`
   background-color: #090b13;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 0 36px;
   overflow-x: hidden;
 `;
@@ -59,6 +119,7 @@ const NavMenu = styled.div`
   flex: 1;
   margin-left: 25px;
   align-items: center;
+  overflow-x: hidden;
   a {
     display: flex;
     place-items: center;
@@ -102,4 +163,20 @@ const UserImage = styled.img`
   width: 48px;
   border-radius: 50%;
   cursor: pointer;
+`;
+
+const Login = styled.a`
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 8px 16px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  border: 1px solid #f9f9f9;
+  border-radius: 4px;
+  transition: all 0.2s ease 0s;
+  cursor: pointer;
+  &:hover {
+    background-color: #f9f9f9;
+    color: #000;
+    border-color: transparent;
+  }
 `;

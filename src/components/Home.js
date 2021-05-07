@@ -6,6 +6,7 @@ import db from "../firebase";
 import ImgSlider from "./ImgSlider";
 import Movies from "./Movies";
 import Viewers from "./Viewers";
+import { Helmet } from "react-helmet";
 
 function Home() {
   const dispatch = useDispatch();
@@ -19,11 +20,24 @@ function Home() {
     });
   }, [dispatch]);
   return (
-    <Container>
-      <ImgSlider />
-      <Viewers />
-      <Movies />
-    </Container>
+    <>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Disney+ Clone</title>
+        <link rel="canonical" href={window.location} />
+        <link rel="icon" href="/images/logo.svg" />
+        <link rel="apple-touch-icon" href="/images/logo.svg" />
+        <meta
+          name="description"
+          content="Disney+ clone created by Akhlak Hossain Jim with React-Redux tamplate, Styled-Component, react-hrlmet & firebase"
+        />
+      </Helmet>
+      <Container>
+        <ImgSlider />
+        <Viewers />
+        <Movies />
+      </Container>
+    </>
   );
 }
 

@@ -1,6 +1,7 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Disney+",
+  "name": "Disney+ clone",
+  "description": "Disney+ clone created by Akhlak Hossain Jim with React-Redux tamplate, Styled-Component, react-hrlmet & firebase",
   "icons": [
     {
       "src": "favicon.ico",
@@ -8,13 +9,13 @@
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
-      "type": "image/png",
+      "src": "images/logo.svg",
+      "type": "image/svg",
       "sizes": "192x192"
     },
     {
-      "src": "logo512.png",
-      "type": "image/png",
+      "src": "images/logo.svg",
+      "type": "image/svg",
       "sizes": "512x512"
     }
   ],
