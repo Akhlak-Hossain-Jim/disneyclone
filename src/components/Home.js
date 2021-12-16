@@ -1,24 +1,23 @@
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { setMovies } from "../features/movie/movieSlice";
-import db from "../firebase";
 import ImgSlider from "./ImgSlider";
 import Movies from "./Movies";
 import Viewers from "./Viewers";
 import { Helmet } from "react-helmet";
+import { selectUserName } from "../features/user/userSlice";
+import { useHistory } from "react-router-dom";
 
 function Home() {
-  const dispatch = useDispatch();
+  const userName = useSelector(selectUserName);
+  const history = useHistory();
 
   useEffect(() => {
-    db.collection("movies").onSnapshot((snapshot) => {
-      let tempMovies = snapshot.docs.map((doc) => {
-        return { id: doc.id, ...doc.data() };
-      });
-      dispatch(setMovies(tempMovies));
-    });
-  }, [dispatch]);
+    if (!userName) {
+      history.push("/login");
+    }
+  }, [userName]);
+
   return (
     <>
       <Helmet>
