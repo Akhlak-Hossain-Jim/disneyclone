@@ -29,7 +29,7 @@ function Header() {
         history.push("/");
       }
     });
-  }, []);
+  }, [history]);
 
   const signIn = () => {
     auth.signInWithPopup(provider).then((result) => {
@@ -88,11 +88,7 @@ function Header() {
               <span>SERIES</span>
             </a>
           </NavMenu>
-          <UserImage
-            onClick={signOut}
-            src="https://lh3.googleusercontent.com/ogw/ADGmqu_M7iN5zIJS00Jmx9gng2MGFn7c4a0tl2-tN6dOLSw=s64-c-mo"
-            alt=""
-          />
+          <UserImage onClick={signOut} src={userPhoto} alt="" />
         </>
       )}
     </Nav>
@@ -126,6 +122,8 @@ const NavMenu = styled.div`
     padding: 0 12px;
     text-decoration: none;
     cursor: pointer;
+    position: relative;
+    margin-bottom: 6px;
     img {
       height: 20px;
     }
@@ -134,24 +132,22 @@ const NavMenu = styled.div`
       color: #fff;
       latter-spacing: 1.42px;
       text-decoration: none;
-      position: relative;
-      &:after {
-        content: "";
-        height: 2px;
-        background: #fff;
-        // width: 100%;
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: -6px;
-        transform-origin: left center;
-        transition: all 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94) 0s;
-        opacity: 0;
-        transform: scaleX(0);
-      }
+    }
+    &::after {
+      content: "";
+      height: 2px;
+      background: #fff;
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -6px;
+      transform-origin: left center;
+      transition: all 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94) 0s;
+      opacity: 0;
+      transform: scaleX(0);
     }
     &:hover {
-      span:after {
+      &::after {
         opacity: 1;
         transform: scaleX(1);
       }
