@@ -1,50 +1,39 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router";
+import { useParams } from "react-router";
 import styled from "styled-components";
-import db from "../firebase";
 import { Helmet } from "react-helmet";
+import movieData from "./data.json";
 
 function Detail() {
-  const { id } = useParams();
-
   const [movie, setMovie] = useState();
 
-  const history = useHistory();
+  const data = movieData.movieData;
+
+  const path = useParams();
 
   useEffect(() => {
-    db.collection("movies")
-      .doc(id)
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          setMovie(doc.data());
-        } else {
-          history.push("/");
-        }
-      });
-  }, [id, movie]);
-  console.log(movie);
+    setMovie(path && data.filter((d) => d.title === path.id));
+  }, [data, path]);
 
   return (
     <>
       {movie && (
-        <Helmet>
-          <meta charSet="utf-8" />
-          <title>{movie.title} | Disney+ clone</title>
-          <link rel="canonical" href={window.location} />
-          <link rel="icon" href={movie.titleImg} />
-          <link rel="apple-touch-icon" href={movie.titleImg} />
-          <meta name="description" content={movie.description} />
-        </Helmet>
-      )}
-      <Container>
-        {movie && (
-          <>
+        <>
+          <Helmet>
+            <meta charSet="utf-8" />
+            <title>{movie[0].title} | Disney+ clone</title>
+            <link rel="canonical" href={window.location} />
+            <link rel="icon" href={movie[0].titleImg} />
+            <link rel="apple-touch-icon" href={movie[0].titleImg} />
+            <meta name="description" content={movie[0].description} />
+          </Helmet>
+          <Container>
+            {/* <> */}
             <Background>
-              <img src={movie.backgroundImg} alt="" />
+              <img src={movie[0].backgroundImg} alt="" />
             </Background>
             <ImageTitle>
-              <img src={movie.titleImg} alt="" />
+              <img src={movie[0].titleImg} alt="" />
             </ImageTitle>
             <Controls>
               <PlayButton>
@@ -62,11 +51,11 @@ function Detail() {
                 <img src="/images/group-icon.png" alt="" />
               </GroupWatchButton>
             </Controls>
-            <SubTitle>{movie.subTitle}</SubTitle>
-            <Description>{movie.description}</Description>
-          </>
-        )}
-      </Container>
+            <SubTitle>{movie[0].subTitle}</SubTitle>
+            <Description>{movie[0].description}</Description>
+          </Container>
+        </>
+      )}
     </>
   );
 }
